@@ -1,4 +1,14 @@
-# vite-chrome-extension-example
+# Yak Shaving Management
+
+TODO
+
+- [ ] Save link for later.
+- [ ] Save link for later with memo.
+- [ ] Save search word for later.
+- [ ] Manage shaving progress.
+- [ ] View links or search words grouped by site location and sorted by save time.
+
+# Development and Contribution
 
 https://developer.chrome.com/docs/extensions/mv3/getstarted/
 
