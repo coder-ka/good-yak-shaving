@@ -1,4 +1,4 @@
-# Yak Shaving Management
+# Good Yak Shaving
 
 TODO
 
