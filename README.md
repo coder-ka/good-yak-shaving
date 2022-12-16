@@ -23,7 +23,7 @@ npm i
 For development.
 
 ```
-npm run -w npm-scripts dev
+npm run dev
 ```
 
 Watcher should be started.
@@ -33,7 +33,7 @@ Watcher should be started.
 For production.
 
 ```
-npm run -w npm-scripts build
+npm run build
 ```
 
 ## Publish

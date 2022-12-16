@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Options from "./Options";
+import View from "./View";
 import "./style.css";
 
 ReactDOM.render(
   <React.StrictMode>
-    <Options />
+    <View />
   </React.StrictMode>,
   document.getElementById("root")
 );
