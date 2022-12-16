@@ -3,7 +3,10 @@ import { Link } from "../../types/Link";
 import { SearchWord } from "../../types/SearchWord";
 import { Site } from "../../types/Site";
 
-type ContextMenuId = "save-link" | "save-selection-as-search-word";
+type ContextMenuId =
+  | "save-link"
+  | "save-selection-as-search-word"
+  | "open-view-page";
 
 chrome.runtime.onInstalled.addListener(async () => {
   chrome.contextMenus.create({
@@ -20,12 +23,12 @@ chrome.runtime.onInstalled.addListener(async () => {
     contexts: ["selection"],
   });
 
-  // chrome.contextMenus.create({
-  //   id: "save-link-with-memo",
-  //   title: "Save link for later with memo",
-  //   type: "normal",
-  //   contexts: ["link"],
-  // });
+  chrome.contextMenus.create({
+    id: "open-view-page",
+    title: "View saved items.",
+    type: "normal",
+    contexts: ["all"],
+  });
 });
 
 chrome.contextMenus.onClicked.addListener((item) => {
@@ -120,6 +123,10 @@ chrome.contextMenus.onClicked.addListener((item) => {
         });
       }
       break;
+    case "open-view-page":
+      chrome.tabs.create({
+        url: "pages/view.html",
+      });
     default:
       break;
   }
