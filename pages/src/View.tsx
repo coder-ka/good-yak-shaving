@@ -16,9 +16,12 @@ function View() {
     });
   }, []);
 
-  // useEffect(() => {
-  //   chrome.storage.sync.set({ color: currentColor });
-  // }, [currentColor]);
+  if (
+    (links === undefined || links.length === 0) &&
+    (searchWords === undefined || searchWords.length === 0)
+  ) {
+    return <div className="p-4 text-lg">There is no items yet.</div>;
+  }
 
   return (
     <div className="text-base p-4 flex flex-col gap-y-3">
@@ -53,31 +56,59 @@ function View() {
           const parentSites = parentSite ? seekParentSites([parentSite]) : [];
 
           return (
-            <a
-              key={linkOrSearchWord.id}
-              href={
-                isLink(linkOrSearchWord)
-                  ? linkOrSearchWord.url
-                  : `https://www.google.com/search?q=${linkOrSearchWord.word}`
-              }
-              target="_blank"
-            >
+            <div className="max-w-[480px]">
               <span className="text-xs text-gray-500">
                 Saved at {new Date(linkOrSearchWord.created).toLocaleString()}
               </span>
-              <div className="p-2 border border-blue-500 rounded  hover:text-blue-600">
-                <div className=" text-sm">
-                  {parentSites.map((s) => (
-                    <BreadcrumbItem key={s.id} site={s}></BreadcrumbItem>
-                  ))}
+              <div className=" border border-blue-500 rounded  hover:text-blue-600 relative">
+                <div className="absolute right-0 top-0">
+                  <button
+                    className="flex justify-center items-center w-[24px] h-[24px] border rounded bg-red-800 text-white"
+                    onClick={(e) => {
+                      const newLinks = links?.filter(
+                        (x) => x.id !== linkOrSearchWord.id
+                      );
+                      setLinks(newLinks);
+                      const newSearchWords = searchWords?.filter(
+                        (x) => x.id !== linkOrSearchWord.id
+                      );
+                      setSearchWords(newSearchWords);
+
+                      chrome.storage.local.set({
+                        links: newLinks,
+                        searchWords: newSearchWords,
+                      });
+
+                      e.stopPropagation();
+                    }}
+                  >
+                    ×
+                  </button>
                 </div>
-                <div className="p-2 whitespace-nowrap overflow-hidden overflow-ellipsis">
-                  {isLink(linkOrSearchWord)
-                    ? linkOrSearchWord.title || linkOrSearchWord.url
-                    : `Search "${linkOrSearchWord.word}" in Google.`}
-                </div>
+                <a
+                  key={linkOrSearchWord.id}
+                  href={
+                    isLink(linkOrSearchWord)
+                      ? linkOrSearchWord.url
+                      : `https://www.google.com/search?q=${linkOrSearchWord.word}`
+                  }
+                  target="_blank"
+                >
+                  <div className="p-2 text-sm">
+                    <div>
+                      {parentSites.map((s) => (
+                        <BreadcrumbItem key={s.id} site={s}></BreadcrumbItem>
+                      ))}
+                    </div>
+                    <div className="p-2 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                      {isLink(linkOrSearchWord)
+                        ? linkOrSearchWord.title || linkOrSearchWord.url
+                        : `Search "${linkOrSearchWord.word}" in Google.`}
+                    </div>
+                  </div>
+                </a>
               </div>
-            </a>
+            </div>
           );
         })}
     </div>
