@@ -6,6 +6,7 @@ import { Site } from "../../types/Site";
 type ContextMenuId =
   | "save-link"
   | "save-selection-as-search-word"
+  | "save-current-page"
   | "open-view-page";
 
 chrome.runtime.onInstalled.addListener(async () => {
@@ -21,6 +22,13 @@ chrome.runtime.onInstalled.addListener(async () => {
     title: "Save selection as search word for later",
     type: "normal",
     contexts: ["selection"],
+  });
+
+  chrome.contextMenus.create({
+    id: "save-current-page",
+    title: "Save current page for later",
+    type: "normal",
+    contexts: ["page"],
   });
 
   chrome.contextMenus.create({
@@ -119,6 +127,28 @@ chrome.contextMenus.onClicked.addListener((item) => {
                   ]
             ),
             sites: (sites || []).concat(siteFound ? [] : [site]),
+          });
+        });
+      }
+      break;
+    case "save-current-page":
+      if (item.pageUrl) {
+        const now = new Date().toISOString();
+        chrome.storage.local.get(["links"], async (result) => {
+          const { links } = result as {
+            links?: Link[];
+          };
+
+          chrome.storage.local.set({
+            links: (links || []).concat([
+              {
+                id: nanoid(12),
+                url: item.pageUrl!,
+                title: await getPageTitle(item.pageUrl!),
+                memo: "",
+                created: now,
+              },
+            ]),
           });
         });
       }

@@ -10,5 +10,5 @@ export type Link = {
   title: string;
   memo: string;
   created: string;
-  siteId: Site["id"];
+  siteId?: Site["id"];
 };
